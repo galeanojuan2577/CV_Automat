@@ -1,0 +1,25 @@
+# Personal CV data
+cv_base.json
+cv_base.json.bak
+
+# User settings
+settings.json
+
+# Logs
+asistente_cv.log
+
+# Temp files
+oferta.txt
+__pycache__/
+*.pyc
+
+# Virtual environment
+venv/
+.venv/
+
+# Generated CVs
+*.docx
+*.pdf
+
+# Environment
+.env

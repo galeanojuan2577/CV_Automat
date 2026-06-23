@@ -1,0 +1,33 @@
+Título: Ingeniero de Ciberseguridad Senior
+Empresa: TechSecure Solutions
+Ubicación: Remoto (Latam)
+Tipo: Tiempo completo
+
+Descripción:
+
+Buscamos un Ingeniero de Ciberseguridad Senior para unirse a nuestro equipo de seguridad ofensiva. Serás responsable de:
+
+- Realizar pruebas de penetración en aplicaciones web y APIs
+- Identificar y reportar vulnerabilidades OWASP Top 10 (SQLi, XSS, CSRF, SSRF)
+- Desarrollar e implementar herramientas de seguridad automatizadas
+- Colaborar con equipos de desarrollo para integrar seguridad en el SDLC
+- Analizar código fuente en busca de vulnerabilidades
+- Participar en ejercicios de Red Team
+
+Requisitos:
+
+- 3+ años de experiencia en ciberseguridad ofensiva
+- Dominio de Burp Suite, Nmap, Metasploit, Wireshark
+- Experiencia con Python para automatización de seguridad
+- Conocimiento de OWASP Testing Guide
+- Experiencia con Docker y CI/CD pipelines
+- Certificaciones deseables: OSCP, GPEN, CEH, o similares
+- Nivel de inglés intermedio-avanzado (lectura técnica)
+
+Ofrecemos:
+
+- Trabajo 100% remoto
+- Salario competitivo en USD
+- Presupuesto anual para certificaciones y formación
+- Seguro médico privado
+- Horario flexible
