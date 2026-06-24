@@ -1,82 +1,119 @@
-# CV Automat — Asistente de CV Inteligente
+# CV Automat
 
-Aplicación de escritorio (Tkinter) que integra **búsqueda inteligente de empleo**, **adaptación automática de CV con IA local (Ollama)**, **generación de PDF profesional** y **asistencia en postulación** vía Playwright o navegador real.
+<div align="center">
 
-> Desarrollado por **Juan Diego Galeano Chica** — Ingeniero en Telecomunicaciones, Ciberseguridad & IA
+**Asistente de CV Inteligente — Búsqueda, Adaptación y Postulación Automatizada**
+
+[![Version](https://img.shields.io/badge/version-0.1.0-blue?style=flat-square)]()
+[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white)]()
+[![Tkinter](https://img.shields.io/badge/GUI-Tkinter-FF6F00?style=flat-square)]()
+[![Ollama](https://img.shields.io/badge/IA-Ollama-000?style=flat-square&logo=ollama&logoColor=white)]()
+[![License](https://img.shields.io/badge/license-MIT-yellow?style=flat-square)]()
+[![Ruff](https://img.shields.io/badge/Ruff-0.9-passing-success?style=flat-square)]()
+
+**CV Editor** • **Job Search** • **AI Adaptation** • **Document Generation** • **Auto-Apply**
+
+</div>
 
 ---
 
-## Arquitectura
+## Screenshots
 
+| CV Editor | Job Search | AI Adaptation |
+|:---:|:---:|:---:|
+| ![Editor](screenshots/cv_editor.png) | ![Buscar](screenshots/buscar_ofertas.png) | ![Oferta](screenshots/oferta_adaptacion.png) |
+| **Document Preview** | **Auto-Apply** | |
+| ![Preview](screenshots/vista_previa.png) | ![Aplicar](screenshots/aplicar.png) | |
+
+---
+
+## Architecture
+
+```mermaid
+graph TB
+    subgraph GUI[Tkinter Desktop App]
+        CVTAB[Mi CV Tab]
+        SEARCH[Buscar Ofertas Tab]
+        OFERTA[Oferta Tab]
+        PREVIEW[Vista Previa Tab]
+        APPLY[Aplicar Tab]
+    end
+
+    subgraph Core[Core Modules]
+        CVM[CV Manager]
+        SCORER[Scorer Engine]
+        ADAPT[Adapter AI]
+        DOCGEN[Document Generator]
+        PDFGEN[PDF Generator]
+    end
+
+    subgraph AI[Local AI]
+        OLLAMA[Ollama<br/>llama3.2 / qwen2.5]
+    end
+
+    subgraph Sources[Job Sources]
+        JOBDROP[28 Global Portals<br/>LinkedIn, Indeed, Glassdoor...]
+        COLOMBIA[Colombia Scrapers<br/>Computrabajo, Elempleo]
+        CAREER[Career-Ops Scanner]
+    end
+
+    subgraph Output[Generated Documents]
+        WORD[Word .docx]
+        PDF[PDF WeasyPrint]
+    end
+
+    subgraph Browser[Browser Automation]
+        PW[Playwright<br/>Firefox / Chromium]
+        BRAVE[Brave Browser<br/>Real Sessions]
+    end
+
+    CVTAB --> CVM
+    CVM --> SCORER
+    SEARCH --> JOBDROP
+    SEARCH --> COLOMBIA
+    SEARCH --> CAREER
+    SEARCH --> SCORER
+    OFERTA --> ADAPT
+    ADAPT --> OLLAMA
+    ADAPT --> DOCGEN
+    ADAPT --> PDFGEN
+    DOCGEN --> WORD
+    PDFGEN --> PDF
+    APPLY --> PW
+    APPLY --> BRAVE
+    PREVIEW --> DOCGEN
+    PREVIEW --> PDFGEN
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                       main.py (GUI Tkinter)                  │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐        │
-│  │  Mi CV   │ │ Buscar   │ │ Oferta   │ │ Aplicar  │        │
-│  │ (edición)│ │ Ofertas  │ │ (cargada) │ │ (auto)   │        │
-│  └──────────┘ └──────────┘ └──────────┘ └──────────┘        │
-└─────────────────────────────────────────────────────────────┘
-         │              │              │              │
-         ▼              ▼              ▼              ▼
-┌──────────────┐ ┌────────────┐ ┌────────────┐ ┌────────────┐
-│  cv_manager  │ │  buscador  │ │ adaptador  │ │  aplicar   │
-│  (persist)   │ │(jobdrop +  │ │(Ollama IA) │ │(Playwright │
-│              │ │ career-ops │ │            │ │  + Brave)  │
-│              │ │ + Colombia)│ │            │ │            │
-└──────────────┘ └────────────┘ └────────────┘ └────────────┘
-         │              │              │              │
-         ▼              ▼              ▼              ▼
-┌──────────────┐ ┌────────────┐ ┌────────────┐ ┌────────────┐
-│  cv_base.json│ │  scorer    │ │generar_doc │ │  config    │
-│  auto-cv-    │ │(híbrido:   │ │(Word +     │ │(paths,     │
-│  agent       │ │ reglas+IA) │ │ WeasyPrint)│ │  modelos)  │
-└──────────────┘ └────────────┘ └────────────┘ └────────────┘
-```
 
 ---
 
-## Funcionalidades
+## Features
 
-### 🧠 Edición de CV
-- Formulario completo con pestañas: Datos Personales, Skills (por categorías), Proyectos, Educación, Certificaciones
-- Persistencia en `cv_base.json` + exportación automática a `auto-cv-agent/config.py`
-- Plantilla vacía incluida para empezar desde cero
+- **CV Editor** — Full profile form: personal data, professional summary, skills by categories, projects with bullet points and impact statements, education, certifications (Credly import), and language proficiencies. Dual persistence in JSON + auto-export.
 
-### 🔍 Búsqueda Inteligente de Empleo
-- **Jobdrop** (28 fuentes globales: LinkedIn, Indeed, Glassdoor, RemoteOK, etc.)
-- **Career-Ops** (scanner de portales)
-- **Scrapers Colombia** (LinkedIn CO, Computrabajo, Elempleo)
-- **Filtros**: ubicación, nivel de experiencia (junior/semi-senior/senior/lead), inglés mínimo
-- **Scoring híbrido**: skills (35%) + proyectos (25%) + competencias clave (20%) + educación/certs (10%) + soft skills (10%), ajustado por ubicación y experiencia
-- ✅ Funciona para **cualquier tipo de trabajo** (no solo tech) — matching general por solapamiento de palabras
+- **Intelligent Job Search** — Aggregates 28+ global job portals (LinkedIn, Indeed, Glassdoor, RemoteOK, WeWorkRemotely, ZipRecruiter) and Colombia-specific sources (LinkedIn CO, Computrabajo, Elempleo). Filters by location, experience level, remote-only, minimum English level.
 
-### 🤖 Adaptación con IA Local (Ollama)
-- Usa **llama3.2** (fallback qwen2.5:0.5b) para adaptar resumen, skills y experiencia a la oferta
-- Prompts diseñados para **no inventar información** — solo reordenar énfasis
-- Sin dependencia de APIs externas ni envío de datos a la nube
+- **Hybrid Scoring Engine** — Rule-based matching: skills (35%), projects (25%), core competencies (20%), education/certs (10%), soft skills (10%). Location bonuses (remote x1.15, hybrid x1.05). Optional AI re-scoring via Ollama (60% rules + 40% AI). Works for any job type, not just tech.
 
-### 📄 Generación de Documentos Profesionales
-- **Word** (python-docx) con cabecera azul marino, secciones con chips, bullets, paleta profesional
-- **PDF** (WeasyPrint) con HTML+CSS tipográfico, mismo estilo profesional
-- Cada CV adaptado se guarda con el **nombre de la oferta**: `CV_Adaptado_senior_full_stack_empresa.docx`
-- Carpeta de salida configurable (Archivo → Carpeta de salida...)
+- **AI Adaptation (Local)** — Uses Ollama (`llama3.2`, fallback `qwen2.5:0.5b`) to adapt professional summary, reorder skills by relevance, and rewrite experience descriptions to emphasize applicable technologies. **Guarantees no fabricated information** — only reorders and re-emphasizes existing content. Zero cloud dependency.
 
-### 🚀 Postulación Asistida
-- **Brave real**: abre el navegador con tus sesiones activas (sin bloqueos de Google/LinkedIn)
-- **Playwright** (Firefox/Chromium): rellena formularios automáticamente con datos del CV
-- Muestra nombre, email, teléfono y ruta del CV listos para copiar/pegar
+- **Professional Document Generation** — **Word** (python-docx): dark blue header, competency chips with colored backgrounds, skill badges, project entries with formatted bullets. **PDF** (WeasyPrint HTML+CSS): A4 typographic layout, 2-column certifications, full CSS styling. Each adapted CV saved with the job offer name.
+
+- **Assisted Job Application** — **Brave mode**: opens your real Brave browser with active sessions (no login blocks). **Playwright mode**: Firefox or Chromium with auto-form-filling (name, email, phone, CV upload). Portal-specific selectors for LinkedIn, Indeed, Computrabajo, Infojobs. Generic fallback selector patterns for other portals.
+
+- **Credly Integration** — Import certifications directly from Credly API with badge metadata.
 
 ---
 
-## Instalación
+## Quick Start
 
-### Requisitos
+### Requirements
 - Python 3.10+
-- Ollama (con modelo `llama3.2`)
-- LibreOffice (para conversión DOCX→PDF, opcional si usas WeasyPrint)
-- Playwright browsers (para automatización con Firefox/Chromium)
+- Ollama with `llama3.2` model
+- LibreOffice (optional, for DOCX→PDF)
+- Playwright browsers (for automation)
 
-### Rápida
+### Automated Install
 ```bash
 git clone https://github.com/galeanojuan2577/CV_Automat.git
 cd CV_Automat
@@ -84,74 +121,97 @@ chmod +x instalar.sh && ./instalar.sh
 trabajo
 ```
 
-### Manual
+### Manual Install
 ```bash
-# Dependencias Python
+git clone https://github.com/galeanojuan2577/CV_Automat.git
+cd CV_Automat
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 pip install playwright weasyprint
 playwright install firefox chromium
-
-# Modelo IA local
 ollama pull llama3.2
-
-# Iniciar
 python3 main.py
 ```
 
-### Configuración
-Variables de entorno (opcional, ver `.env.example`):
-| Variable | Por defecto |
+---
+
+## Configuration
+
+### Environment Variables
+
+| Variable | Default | Description |
+|---|---|---|
+| `CV_AUTOMAT_DIR` | `~/Documentos/Personal/CV_Automat` | Project data directory |
+| `CV_OUTPUT_DIR` | `~/Documentos/CV` | Generated CV output folder |
+| `AUTO_CV_AGENT_DIR` | `~/auto-cv-agent` | Auto CV agent sync path |
+| `CAREER_OPS_DIR` | `~/career-ops` | Career-ops scanner path |
+| `OLLAMA_HOST` | `http://localhost:11434` | Ollama API endpoint |
+| `OLLAMA_MODEL` | `llama3.2` | LLM model for adaptation |
+
+### Scoring Weights
+
+| Component | Weight |
 |---|---|
-| `CV_AUTOMAT_DIR` | `~/Documentos/Personal/CV_Automat` |
-| `CV_OUTPUT_DIR` | `~/Documentos/CV` |
-| `AUTO_CV_AGENT_DIR` | `~/auto-cv-agent` |
-| `CAREER_OPS_DIR` | `~/career-ops` |
-| `FILTERS_PY_PATH` | `auto-cv-gui/filters.py` |
+| Skills matching | 35% |
+| Projects matching | 25% |
+| Core competencies | 20% |
+| Education & certifications | 10% |
+| Soft skills | 10% |
+
+### Location Bonuses
+| Type | Multiplier |
+|---|---|
+| Remote / WFH | x1.15 |
+| Hybrid | x1.05 |
+| Bogota (on-site) | x0.90 |
+| Other city (on-site) | x0.70 |
 
 ---
 
-## Stack Tecnológico
+## Tech Stack
 
-| Capa | Tecnología |
+| Layer | Technology |
 |---|---|
-| GUI | Python Tkinter + ttk |
-| IA Local | Ollama (llama3.2 / qwen2.5) |
-| PDF | WeasyPrint (HTML+CSS) |
-| Word | python-docx |
-| Web Scraping | jobdrop, requests + BeautifulSoup, Playwright |
-| Automatización | Playwright + zendriver (Brave) |
-| Scrapers Colombia | requests + BeautifulSoup (LinkedIn CO, Computrabajo, Elempleo) |
+| GUI | Python Tkinter + ttk (themed) |
+| Local AI | Ollama (llama3.2 / qwen2.5:0.5b) |
+| Document (Word) | python-docx |
+| Document (PDF) | WeasyPrint (HTML+CSS → PDF) |
+| Web Scraping | jobdrop library, requests + BeautifulSoup4 |
+| Colombia Scrapers | requests + BeautifulSoup4 (LinkedIn CO, Computrabajo, Elempleo) |
+| Browser Automation | Playwright (Firefox/Chromium) + Brave direct launch |
+| Persistence | JSON (cv_base.json) + auto-sync |
+| Scoring | Hybrid rule-based + AI (Ollama) |
 
 ---
 
-## Estructura del Proyecto
+## Project Structure
 
 ```
 CV_Automat/
-├── main.py                  # GUI principal (Tkinter, 5 tabs)
-├── config.py                # Rutas, modelos, pesos de scoring
-├── cv_manager.py            # Persistencia del CV (JSON + auto-cv-agent)
-├── adaptador.py             # Adaptación con Ollama (resumen, skills, experiencia)
-├── scorer.py                # Motor de scoring híbrido (reglas + IA)
-├── buscador.py              # Búsqueda y filtrado de ofertas
-├── scrapers_colombia.py     # Scrapers Colombia (LinkedIn, Computrabajo, Elempleo)
-├── aplicar.py               # Postulación automática (Playwright + Brave)
-├── generar_documento.py     # Generación de Word
-├── generar_pdf_html.py      # Generación de PDF con WeasyPrint
-├── generar_cv_maestro.py    # CV gold master (plantilla)
-├── credly_importer.py       # Importador de badges Credly
-├── requirements.txt         # Dependencias Python
-├── instalar.sh              # Instalación automatizada
-├── trabajo.sh               # Script de inicio
-├── cv_base.json.example     # Plantilla de CV vacía
-├── .env.example             # Variables de entorno
+├── main.py                  # GUI entry point (Tkinter, 5 tabs)
+├── config.py                # Central configuration (paths, models, scoring weights)
+├── cv_manager.py            # CV persistence: JSON + auto-cv-agent sync
+├── adaptador.py             # AI adaptation with Ollama
+├── scorer.py                # Hybrid scoring engine (rules + AI)
+├── buscador.py              # Job search orchestrator (28 sources)
+├── scrapers_colombia.py     # Colombia-specific portal scrapers
+├── aplicar.py               # Application assistant (Playwright + Brave)
+├── generar_documento.py     # Word (.docx) generation
+├── generar_pdf_html.py      # PDF generation via WeasyPrint
+├── generar_cv_maestro.py    # Master CV template
+├── credly_importer.py       # Credly certification import
+├── requirements.txt         # Python dependencies
+├── instalar.sh              # Automated install script
+├── trabajo.sh               # Launch script
+├── oferta_ejemplo.txt       # Example job offer
+├── cv_base.json.example     # Empty CV template
+├── .env.example             # Environment variables template
 └── .gitignore
 ```
 
 ---
 
-## Licencia
+## License
 
 MIT
