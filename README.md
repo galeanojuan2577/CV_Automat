@@ -30,41 +30,41 @@
 ## Architecture
 
 ```mermaid
-graph TB
-    subgraph GUI[Tkinter Desktop App]
-        CVTAB[Mi CV Tab]
-        SEARCH[Buscar Ofertas Tab]
-        OFERTA[Oferta Tab]
-        PREVIEW[Vista Previa Tab]
-        APPLY[Aplicar Tab]
+flowchart TB
+    subgraph GUI["Tkinter Desktop App"]
+        CVTAB["Mi CV Tab"]
+        SEARCH["Buscar Ofertas Tab"]
+        OFERTA["Oferta Tab"]
+        PREVIEW["Vista Previa Tab"]
+        APPLY["Aplicar Tab"]
     end
 
-    subgraph Core[Core Modules]
-        CVM[CV Manager]
-        SCORER[Scorer Engine]
-        ADAPT[Adapter AI]
-        DOCGEN[Document Generator]
-        PDFGEN[PDF Generator]
+    subgraph Core["Core Modules"]
+        CVM["CV Manager"]
+        SCORER["Scorer Engine"]
+        ADAPT["Adapter AI"]
+        DOCGEN["Document Generator"]
+        PDFGEN["PDF Generator"]
     end
 
-    subgraph AI[Local AI]
-        OLLAMA[Ollama<br/>llama3.2 / qwen2.5]
+    subgraph AI["Local AI"]
+        OLLAMA["Ollama - llama3.2 / qwen2.5"]
     end
 
-    subgraph Sources[Job Sources]
-        JOBDROP[28 Global Portals<br/>LinkedIn, Indeed, Glassdoor...]
-        COLOMBIA[Colombia Scrapers<br/>Computrabajo, Elempleo]
-        CAREER[Career-Ops Scanner]
+    subgraph Sources["Job Sources"]
+        JOBDROP["28 Global Portals"]
+        COLOMBIA["Colombia Scrapers"]
+        CAREER["Career-Ops Scanner"]
     end
 
-    subgraph Output[Generated Documents]
-        WORD[Word .docx]
-        PDF[PDF WeasyPrint]
+    subgraph Output["Generated Documents"]
+        WORD["Word DOCX"]
+        PDF["PDF WeasyPrint"]
     end
 
-    subgraph Browser[Browser Automation]
-        PW[Playwright<br/>Firefox / Chromium]
-        BRAVE[Brave Browser<br/>Real Sessions]
+    subgraph Browser["Browser Automation"]
+        PW["Playwright - Firefox / Chromium"]
+        BRAVE["Brave Browser - Real Sessions"]
     end
 
     CVTAB --> CVM
