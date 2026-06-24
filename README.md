@@ -30,59 +30,23 @@
 ## Architecture
 
 ```mermaid
-flowchart TB
-    subgraph GUI["Tkinter Desktop App"]
-        CVTAB["Mi CV Tab"]
-        SEARCH["Buscar Ofertas Tab"]
-        OFERTA["Oferta Tab"]
-        PREVIEW["Vista Previa Tab"]
-        APPLY["Aplicar Tab"]
-    end
-
-    subgraph Core["Core Modules"]
-        CVM["CV Manager"]
-        SCORER["Scorer Engine"]
-        ADAPT["Adapter AI"]
-        DOCGEN["Document Generator"]
-        PDFGEN["PDF Generator"]
-    end
-
-    subgraph AI["Local AI"]
-        OLLAMA["Ollama - llama3.2 / qwen2.5"]
-    end
-
-    subgraph Sources["Job Sources"]
-        JOBDROP["28 Global Portals"]
-        COLOMBIA["Colombia Scrapers"]
-        CAREER["Career-Ops Scanner"]
-    end
-
-    subgraph Output["Generated Documents"]
-        WORD["Word DOCX"]
-        PDF["PDF WeasyPrint"]
-    end
-
-    subgraph Browser["Browser Automation"]
-        PW["Playwright - Firefox / Chromium"]
-        BRAVE["Brave Browser - Real Sessions"]
-    end
-
-    CVTAB --> CVM
-    CVM --> SCORER
-    SEARCH --> JOBDROP
-    SEARCH --> COLOMBIA
-    SEARCH --> CAREER
-    SEARCH --> SCORER
-    OFERTA --> ADAPT
-    ADAPT --> OLLAMA
-    ADAPT --> DOCGEN
-    ADAPT --> PDFGEN
-    DOCGEN --> WORD
-    PDFGEN --> PDF
-    APPLY --> PW
-    APPLY --> BRAVE
-    PREVIEW --> DOCGEN
+graph TD
+    CVTAB[Mi CV Tab] --> CVM[CV Manager]
+    SEARCH[Buscar Ofertas] --> JOBDROP[28 Global Portals]
+    SEARCH --> COLOMBIA[Colombia Scrapers]
+    SEARCH --> CAREER[Career-Ops Scanner]
+    SEARCH --> SCORER[Scorer Engine]
+    OFERTA[Oferta] --> ADAPT[Adapter AI]
+    ADAPT --> OLLAMA[Ollama llama3.2]
+    ADAPT --> DOCGEN[Document Generator]
+    ADAPT --> PDFGEN[PDF Generator]
+    DOCGEN --> WORD[Word DOCX]
+    PDFGEN --> PDF[PDF WeasyPrint]
+    APPLY[Aplicar] --> PW[Playwright]
+    APPLY --> BRAVE[Brave Browser]
+    PREVIEW[Vista Previa] --> DOCGEN
     PREVIEW --> PDFGEN
+    CVM --> SCORER
 ```
 
 ---
